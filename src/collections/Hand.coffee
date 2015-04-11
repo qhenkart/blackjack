@@ -25,3 +25,9 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
 
+###
+ hitCard = @deck.pop()
+    @add(hitCard)
+    if @minScore() > 21 then @trigger 'bust'
+    hitCard
+###

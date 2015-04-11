@@ -10,10 +10,10 @@ class window.HandView extends Backbone.View
   render: ->
     @$el.children().detach()
     @$el.html @template @collection
-    @$el.append @collection.map (card) ->
-      new CardView(model: card).$el
     if !@collection.hasAce()
       @$('.score').text @collection.scores()[0]
     else
       @$('.score').text @collection.scores()[0] + " :: Ace is High: " + @collection.scores()[1]
 
+    @$el.append @collection.map (card) ->
+      new CardView(model: card).$el
