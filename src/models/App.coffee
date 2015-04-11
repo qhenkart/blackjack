@@ -9,35 +9,42 @@ class window.App extends Backbone.Model
     #listener for stand event
 
     # calls dealer functionality
-    (@get 'playerHand').on 'stand', (->
+    (@get 'playerHand').once 'stand', (->
+      # @stopListening('stand')
+
       (@get 'dealerHand').first().flip()
-
-      dealer = @get 'dealerHand'
-
-      control = true
-      while control
-       if dealer.scores()[1] < 17
-          dealer.hit()
-        else if dealer.scores()[1] <= 21
-          @resolved()
-          control = false
-        else if dealer.scores()[0] < 17
-          dealer.hit()
-        else if dealer.scores()[0] <= 21
-          @resolved()
-          control = false
-        else
-          alert "Dealer Busts! You win!"
-          @trigger "bust"
-          new AppView(model: new App()).$el.appendTo 'body'
-          control = false
-      ), @
+      @control = true
+      @play()
+    ), @
 
     (@get "playerHand").on 'bust', (->
       alert "Bust! You Lose!"
-      @trigger 'bust'
-      new AppView(model: new App()).$el.appendTo 'body'
-      ), @
+      @refreshGame()
+    ), @
+
+  play: ->
+    dealer = @get 'dealerHand'
+    setTimeout (=>
+      if dealer.scores()[1] < 17
+        dealer.hit()
+      else if dealer.scores()[1] <= 21
+        @resolved()
+        @control = false
+      else if dealer.scores()[0] < 17
+        dealer.hit()
+      else if dealer.scores()[0] <= 21
+        @resolved()
+        @control = false
+      else
+        alert "Dealer Busts! You win!"
+        @refreshGame()
+        @control = false
+
+      console.log @control
+      if @control == true then @play()
+
+    ), 800
+
 
 
   resolved: ->
@@ -45,5 +52,11 @@ class window.App extends Backbone.Model
     playerScore = if (@get 'playerHand').scores()[1] <= 21 then (@get 'playerHand').scores()[1] else (@get 'playerHand').scores()[0]
 
     winner = if dealerScore > playerScore then 'Dealer' else 'You'
-    alert winner
+    alert "#{winner} Won!"
+    @refreshGame()
+
+  refreshGame: ->
+    @trigger 'refresh'
+    new AppView(model: new App()).$el.appendTo 'body'
+
 

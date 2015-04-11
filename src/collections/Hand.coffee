@@ -25,9 +25,3 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
 
-###
-1) bust function
-2) create logic for player score
-3) when player stands, and after dealer finishes, we need to compare score
-
-###
