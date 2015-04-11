@@ -5,6 +5,10 @@ class window.Hand extends Backbone.Collection
 
   hit: ->
     @add(@deck.pop())
+    if @minScore() > 21 then @trigger 'bust'
+
+  stand: ->
+    @trigger 'stand'
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
@@ -21,3 +25,9 @@ class window.Hand extends Backbone.Collection
     [@minScore(), @minScore() + 10 * @hasAce()]
 
 
+###
+1) bust function
+2) create logic for player score
+3) when player stands, and after dealer finishes, we need to compare score
+
+###
